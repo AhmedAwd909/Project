@@ -18,84 +18,72 @@
  * Define Global Variables
  * 
 */
-// navigation global var
-const navbarList = document.getElementById('navbar__list');
-// sections global var
-const sections = document.querySelectorAll('section');
+// Define sections 
+const sections = document.querySelectorAll("section");
+
+// Define navigation 
+const navList = document.getElementById("navbar__list");
 
 /**
  * End Global Variables
+ * Start Helper Functions
+ * 
+*/
+function createNavList() {
+    //Looping over all sections
+    for(section of sections) {
+        //Getting section name
+        secName = section.getAttribute("data-nav");
+        //Getting section link
+        secLink = section.getAttribute("id");
+        //Create list for each section
+        newItem = document.createElement("li");
+        //Add section name, link and CSS class to apply styles
+        newItem.innerHTML = `<a class="menu__link" href="#${secLink}">${secName}</a>`;
+        //Appending new list to navbar menu
+        navList.appendChild(newItem);
+    }
+} createNavList()
 
+//Adding active class to section in viewport
+
+//Check if section in viewport
+function viewportChecker(elem) {
+    let secPosition = elem.getBoundingClientRect();
+    return (secPosition.top >= 0);
+}
+
+//Switch active class between sections
+function switchActiveClass() {
+    //Looping over all page sections
+    for (section of sections) {
+        //When section is in veiwport
+        if (viewportChecker(section)) {
+            //Add active class if it wasn't already contains
+            if (!section.classList.contains("your-active-class")) {
+                section.classList.add("your-active-class");  
+            } 
+            //Remove active class if it wasn't in viewport
+        } else {section.classList.remove("your-active-class");}
+    }
+}
+//When scroll envoke the function
+document.addEventListener("scroll", switchActiveClass);
+
+/**
+ * End Helper Functions
  * Begin Main Functions
  * 
 */
 
-// Create the Navbar
+// build the nav
 
-const createNav = () => {
 
-    let navLink = '';
-    // looping over all sections
-    sections.forEach(section => {
+// Add class 'active' to section when near top of viewport
 
-        const sectionID = section.id;
-        const sectionDataNav = section.dataset.nav;
 
-        navLink += `<li><a class="menu__link" href="#${sectionID}">${sectionDataNav}</a></li>`;
+// Scroll to anchor ID using scrollTO event
 
-    });
-    // append all elements to the navigation
-    navbarList.innerHTML = navLink;
-}; createNav();
-
-// Add active class to section just if it was near to the top of viewport
-
-// getting the largest value that's less or equal to the number
-
-const offset = (section) => {
-    return Math.floor(section.getBoundingClientRect().top);
-};
-
-// remove active class from the section
-const removeActive = (section) => {
-    section.classList.remove('your-active-class');
-};
-// add the active class to the section
-const addActive = (conditional, section) => {
-    if(conditional){
-        section.classList.add('your-active-class');
-    };
-};
-
-//Execute the function
-const activateSection = () => {
-    sections.forEach(section => {
-        const elementOffset = offset(section);
-
-        inviewport = () => elementOffset < 150 && elementOffset >= -150;
-
-        removeActive(section);
-        addActive(inviewport(),section);
-    });
-};
-
-window.addEventListener('scroll' ,activateSection);
-
-// Use scrollTO event to scroll to anchor ID 
-
-const scrolling = () => {
-
-    const links = document.querySelectorAll('.navbar__menu a');
-    links.forEach(link => {
-        link.addEventListener('click', () => {
-            for(i = 0 ; i<sections ; i++){
-                sections[i].addEventListener("click",sectionScroll(link));
-            }
-        });
-    });
-};
-
-scrolling();
 
 /**
  * End Main Functions
@@ -108,5 +96,3 @@ scrolling();
 // Scroll to section on link click
 
 // Set sections as active
-
-
